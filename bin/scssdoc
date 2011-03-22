@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 require 'rubygems'
-require 'css_doc'
+require 'scss_doc'
 require 'optparse'
 
-class CSSDocCli
+class SCSSDocCli
   def self.run(args)
     options = {
       :input_dir => '.',
@@ -12,7 +12,7 @@ class CSSDocCli
       :template_path => File.expand_path(File.dirname(__FILE__) + "/../src/templates/default")
     }
     OptionParser.new do |opts|
-      opts.banner = "Usage: cssdoc [options] [input-dir/input-files]"
+      opts.banner = "Usage: scssdoc [variables path]"
       opts.on("-o", "--output=dir", "Specify output directory") do |dir|
         options[:output_dir] = dir
       end
@@ -35,9 +35,9 @@ class CSSDocCli
     end.parse!
     options[:input_dir] = ARGV.first if ARGV.first
     
-    driver = CSSDoc::Driver.new
+    driver = SCSSDoc::Driver.new
     driver.run(options)
   end
 end
 
-CSSDocCli.run(ARGV)
+SCSSDocCli.run(ARGV)

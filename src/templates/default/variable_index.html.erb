@@ -1,0 +1,25 @@
+<h1>Variable Index</h1>
+
+<dl class="index">
+    <dt></dt>
+    <dd>
+      <ul>
+        <% @collection.variables.each do |variable| %>
+          <li>
+              <p>
+                  <% tags = ["cfg", "type", "options", "description"] %>
+                  <% if tags %>
+                  <% tags.each do |t| %>
+                    <% if variable.instance_variable_defined? "@#{t}" %>
+                      <% value = variable.instance_variable_get "@#{t}" %>
+                      <%= "#{t}: #{value}" %>
+                      <br />
+                    <% end %>
+                  <% end %>
+                  <% end %>
+              </p>
+          </li>
+        <% end %>
+      </ul>
+    </dd>
+</dt>

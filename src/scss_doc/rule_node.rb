@@ -1,6 +1,5 @@
-module CSSDoc
-  class RuleSet < CSSPool::CSS::RuleSet
-    attr_accessor :document
+module SCSSDoc
+  class RuleNode < Sass::Tree::RuleNode
     attr_accessor :documentation
     
     def selector_css

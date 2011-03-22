@@ -1,0 +1,14 @@
+spec = Gem::Specification.new do |s|
+  s.name          = 'scss_doc'
+  s.version       = '0.0.1'
+  s.summary       = "Documentation generator for SCSS files, similar to CSSDOC, Javadoc or RDoc."
+  s.description   = %{Library and Executable that extracts documentation from SCSS files.}
+  s.files         = <%= (Dir['src/**/*.*']).inspect %>
+  s.date          = <%= Date.today.strftime('%Y-%m-%d').inspect %>
+  s.require_path  = 'src'
+  s.bindir        = 'bin'
+  s.executables   = <%= Dir['bin/*'].collect { |file| File.basename(file) }.inspect %>
+  s.author        = "Robert Dougan"
+  s.email         = "rdougan@me.com"
+  s.homepage      = "http://rwd.me"
+end

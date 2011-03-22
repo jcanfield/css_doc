@@ -1,6 +1,6 @@
 require 'erb'
 
-module CSSDoc
+module SCSSDoc
   class Template
     @@default_template_path = File.dirname(__FILE__) + '/../templates/default'
     

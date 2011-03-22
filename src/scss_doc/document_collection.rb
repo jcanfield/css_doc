@@ -1,17 +1,17 @@
-module CSSDoc
-  class DocumentCollection < CSSPool::CSS::Document
+module SCSSDoc
+  class DocumentCollection
     attr_accessor :documents
     
     def initialize
       @documents = []
     end
     
-    def rule_sets
-      documents.collect { |document| document.rule_sets }.flatten
+    def rule_nodes
+      documents.collect { |document| document.children }.flatten
     end
     
-    def selectors
-      rule_sets.collect { |rule_set| rule_set.selectors }.flatten
+    def variables
+      documents.collect { |document| document.variables }.flatten
     end
     
     def sections
@@ -24,6 +24,18 @@ module CSSDoc
     
     def selector_hash
       selectors.inject({}) { |hash, selector| (hash[selector.to_css] ||= []) << selector; hash }
+    end
+    
+    def variable_hash
+      array = []
+      
+      variables.each{|v|
+        array << {
+          :name => v.name
+        }
+      }
+      
+      array
     end
     
     def section_hash

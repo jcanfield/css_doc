@@ -1,7 +1,12 @@
-module CSSDoc
+require 'rubygems'
+require 'fileutils'
+require 'sass'
+
+module SCSSDoc
   class Documentation
     class Section
       attr_accessor :lines
+      
       def initialize(lines)
         self.lines = lines
       end
@@ -19,38 +24,30 @@ module CSSDoc
         result.gsub('<p></p>', '')
       end
     end
-      
-    class CodeSection < Section
-      def to_html
-        result = "<pre>" + lines.join("\n").gsub("<", "&lt;").gsub(">", "&gt;").gsub('"', '&quot;') + "</pre>"
-        result << %{<div class="example">#{lines.join("\n")}</div>}
-      end
-    end
     
     class Sections < Array
       def to_html
         collect {|section| section.to_html}
       end
     end
-
+    
     attr_accessor :comment
     attr_accessor :sections
     
-    def self.tags
-      @tags ||= []
-    end
+    attr_accessor :cfg
+    attr_accessor :type
+    attr_accessor :options
     
-    def self.define_tag(*names)
-      names.each do |name|
-        attr_accessor name
-        tags << name
-      end
+    def self.tags
+      @tags = [:cfg, :type, :options]
     end
     
     def initialize(comment)
       @comment = comment
       @sections = Sections.new
       parse_documentation
+      
+      puts self.inspect
     end
     
     def to_s
@@ -69,7 +66,7 @@ module CSSDoc
     end
     
     def parse_comment
-      @parsed_comment ||= comment.gsub(/\*\/$/, '').split("\n").collect { |line| line.gsub(/^\s*\*/, '') }
+      @parsed_comment ||= comment.gsub(/\*\/$/, '').split("\n").collect { |line| line.gsub(/^\s*\*/, '').gsub(/^\/\*\*/, '') }
     end
     
     def parse_documentation
@@ -83,29 +80,15 @@ module CSSDoc
   
     def parse(lines)
       section_type = TextSection
-      section_text = []
+      section_text = ""
+      
       lines.each do |line|
         unless parse_tags(line)
-          if line =~ /@code/
-            sections << section_type.new(section_text)
-            section_text = []
-            section_type = CodeSection
-          elsif line =~ /@endcode/
-            sections << section_type.new(section_text)
-            section_text = []
-            section_type = TextSection
-          elsif line =~ /@description/
-            section_text << line.gsub(/@description/, '')
-          else
-            section_text << line
-          end
+          section_text << line
         end
       end
-      sections << section_type.new(section_text)
       
-      sections.each do |section|
-        Examples.add(section) if section.is_a?(CodeSection)
-      end
+      sections << section_type.new(section_text.strip.gsub('  ', ' '))
     end
   end
 end
